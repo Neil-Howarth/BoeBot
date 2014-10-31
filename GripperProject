@@ -1,0 +1,79 @@
+#include <Servo.h>
+//define variables
+unsigned long tnow=0;
+Servo gripservo;
+Servo leftmotor;
+Servo rightmotor;
+int pos = 2000;
+int gripport=3;
+int leftwheel=10;
+int rightwheel=11;
+
+unsigned long tfor = 1500;
+unsigned long trest = 500;
+unsigned long tturn = 1175;
+unsigned long tfor2 = 1250;
+
+void setup()
+{
+ gripservo.attach(gripport);
+leftmotor.attach(leftwheel);
+rightmotor.attach(rightwheel);
+pinMode(gripport,OUTPUT);
+pinMode(leftwheel,OUTPUT);
+pinMode(rightwheel,OUTPUT);
+}
+
+void forward(unsigned long tym) // Forward travel function
+{
+ unsigned long tnow = millis(); // get reference time
+ while(millis()-tnow <= tym)
+ {
+  leftmotor.writeMicroseconds(1250); // Motor speed
+  rightmotor.writeMicroseconds(1750); // Motor speed
+ }
+}
+
+void rest(unsigned long tym) // Rest function
+{
+ unsigned long tnow = millis(); // get reference time
+ while(millis()-tnow <= tym)
+ {
+  leftmotor.writeMicroseconds(1500); // left wheel rest
+  rightmotor.writeMicroseconds(1500); // right wheel rest
+ }
+}
+
+void turn(unsigned long tym) // Turn function
+{
+  unsigned long tnow = millis(); // get reference time
+ while(millis()-tnow <= tym)
+ {
+  leftmotor.writeMicroseconds(1500); // motor speed
+  rightmotor.writeMicroseconds(1200);// motor speed
+ }
+}
+
+
+void block() // Function to make Arduino stop loop
+{
+ while(millis() > 0) // Reference time
+ { 
+ }
+}
+
+
+void loop ()
+{
+  gripservo.writeMicroseconds(1000);
+   forward(tfor);
+   rest(trest);
+   gripservo.writeMicroseconds(1400);
+   rest(trest);
+  turn(tfor2);
+  forward(tfor2);
+  rest(trest);
+  gripservo.writeMicroseconds(1000);
+  rest(trest);
+  block();
+}
